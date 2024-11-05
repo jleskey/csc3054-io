@@ -1,7 +1,7 @@
-.equ    STDIN       0
-.equ    STDOUT      1
-.equ    SYS_READ    63
-.equ    SYS_WRITE   64
+.equ    STDIN,      0
+.equ    STDOUT,     1
+.equ    SYS_READ,   63
+.equ    SYS_WRITE,  64
 
 .section .rodata
 prompt_a:   .asciz  "Input a: "
@@ -24,6 +24,7 @@ inputWord:
 # int print : Print the given string
 # a0 <string *value> : the string address
 print:
+    mv      s0, ra                          # s0: saved return address
     mv      a1, a0                          # a1: string address
 
     jal     measureString
@@ -34,6 +35,7 @@ print:
 
     ecall
 
+    mv      ra, s0                          # ra: restored return address
     ret
 
 # int measureString : Get length of given string
