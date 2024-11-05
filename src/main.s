@@ -7,8 +7,8 @@ prompt_c:
     .asciz "Input c: "
 label_f:
     .asciz "The result of f = a + b - c is "
-newline:
-    .asciz "\n"
+end:
+    .asciz ".\n"
 
 .text
 .global main
