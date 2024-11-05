@@ -16,9 +16,9 @@ end:        .asciz  ".\n"
 main:
     j exit
 
-# int inputWord : Prompt user for an integer
+# int inputInt : Prompt user for an integer
 # a0 <string *prompt> : the prompt address
-inputWord:
+inputInt:
     nop
 
 # int print : Print the given string
@@ -30,7 +30,7 @@ print:
     jal     measureString
     mv      a2, a0                          # a2: length of string
 
-    li      a7, SYS_WRITE                   # a7: syscall
+    li      a7, SYS_WRITE                   # a7: system call
     li      a0, STDOUT                      # a0: file descriptor
 
     ecall
@@ -53,6 +53,6 @@ measureString:
         ret
 
 exit:
-    li      a0, 0
-    li      a7, 93
+    li      a0, 0                           # a0: exit code
+    li      a7, 93                          # a7: system call
     ecall
