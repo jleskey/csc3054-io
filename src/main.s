@@ -4,17 +4,22 @@
 .equ    SYS_WRITE   64
 
 .section .rodata
-prompt_a:
-    .asciz  "Input a: "
-prompt_b:
-    .asciz  "Input b: "
-prompt_c:
-    .asciz  "Input c: "
-label_f:
-    .asciz  "The result of f = a + b - c is "
-end:
-    .asciz  ".\n"
+prompt_a:   .asciz  "Input a: "
+prompt_b:   .asciz  "Input b: "
+prompt_c:   .asciz  "Input c: "
+label_f:    .asciz  "The result of f = a + b - c is "
+end:        .asciz  ".\n"
 
 .text
 .global main
+
 main:
+    j exit
+
+input:
+    nop
+
+exit:
+    li      a0, 0
+    li      a7, 93
+    ecall
