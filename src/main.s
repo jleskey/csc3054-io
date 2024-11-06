@@ -18,13 +18,32 @@ buffer:     .space  11
 .global main
 
 main:
-    jal readInt
+    la      a0, prompt_a
+    jal     inputInt
+
+    mv      s2, a0
+
+    la      a0, prompt_b
+    jal     inputInt
+
+    add     s2, s2, a0
+
+    la      a0, prompt_c
+    jal inputInt
+
+    sub     s2, s2, a0
+
     j exit
 
 # int inputInt : Prompt user for an integer
 # a0 <string *prompt> : the prompt address
 inputInt:
-    nop
+    mv      s1, ra                          # s0: saved return address
+    jal print
+    jal readInt
+    mv      ra, s1                          # ra: restored return address
+    ret
+
 
 # int readInt : Read integer from user input
 readInt:
@@ -54,7 +73,7 @@ readInt:
 # int print : Print the given string
 # a0 <string *value> : the string address
 print:
-    mv      s0, ra                          # s0: saved return address
+    mv      s0, ra                          # s1: saved return address
     mv      a1, a0                          # a1: string address
 
     jal     measureString
