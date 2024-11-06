@@ -2,6 +2,7 @@
 .equ    STDOUT,     1
 .equ    SYS_READ,   63
 .equ    SYS_WRITE,  64
+.equ    SYS_EXIT,   93
 
 .section .rodata
 prompt_a:   .asciz  "Input a: "
@@ -54,5 +55,5 @@ measureString:
 
 exit:
     li      a0, 0                           # a0: exit code
-    li      a7, 93                          # a7: system call
+    li      a7, SYS_EXIT                    # a7: system call
     ecall
