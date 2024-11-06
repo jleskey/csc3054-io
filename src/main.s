@@ -11,16 +11,45 @@ prompt_c:   .asciz  "Input c: "
 label_f:    .asciz  "The result of f = a + b - c is "
 end:        .asciz  ".\n"
 
+.data
+buffer:     .space  11
+
 .text
 .global main
 
 main:
+    jal readInt
     j exit
 
 # int inputInt : Prompt user for an integer
 # a0 <string *prompt> : the prompt address
 inputInt:
     nop
+
+# int readInt : Read integer from user input
+readInt:
+    li      a7, SYS_READ                    # a7: system call
+    li      a0, STDIN                       # a0: file descriptor
+    la      a1, buffer                      # a1: buffer address
+    li      a2, 11                          # Accept 11 characters.
+    ecall
+
+    li      a0, 0                           # a0 (return): entered integer
+    la      t0, buffer                      # t0: buffer address
+    la      t1, '\n'                        # t1: newline character
+    la      t2, 10                          # t2: decimal place multiplier
+
+    readIntLoop:
+        lb      t3, 0(t0)                   # t3: current character code
+        beq     t3, t1, readIntExit
+        beqz    t3, readIntExit
+        addi    t3, t3, -48                 # t3: current digit
+        mul     a0, a0, t2
+        add     a0, a0, t3
+        addi    t0, t0, 1
+        j       readIntLoop
+    readIntExit:
+        ret
 
 # int print : Print the given string
 # a0 <string *value> : the string address
