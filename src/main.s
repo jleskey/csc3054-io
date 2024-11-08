@@ -6,13 +6,13 @@
 .equ    BUFFER_SIZE,    12
 
 .section .rodata
-intro_equation:     .asciz  "Equation\n========\nf = a + b - c\n\n"
-intro_inputs:       .asciz  "Inputs\n======\n"
-prompt_a:           .asciz  "let a = "
-prompt_b:           .asciz  "let b = "
-prompt_c:           .asciz  "let c = "
-intro_results:      .asciz  "\nResult\n======\nf = "
-end:                .asciz  "\n"
+intro_equation:     .asciz  "Equation:\n\n\tf = a + b - c\n\n"
+intro_inputs:       .asciz  "Inputs:\n\n"
+prompt_a:           .asciz  "\tlet a = "
+prompt_b:           .asciz  "\tlet b = "
+prompt_c:           .asciz  "\tlet c = "
+intro_results:      .asciz  "\nResult:\n\n\tf = "
+end:                .asciz  "\n\n"
 
 .data
 buffer:     .space  BUFFER_SIZE
