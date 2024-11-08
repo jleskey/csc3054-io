@@ -1,8 +1,9 @@
-.equ    STDIN,      0
-.equ    STDOUT,     1
-.equ    SYS_READ,   63
-.equ    SYS_WRITE,  64
-.equ    SYS_EXIT,   93
+.equ    STDIN,          0
+.equ    STDOUT,         1
+.equ    SYS_READ,       63
+.equ    SYS_WRITE,      64
+.equ    SYS_EXIT,       93
+.equ    BUFFER_SIZE,    11
 
 .section .rodata
 prompt_a:   .asciz  "Input a: "
@@ -12,7 +13,7 @@ label_f:    .asciz  "The result of f = a + b - c is "
 end:        .asciz  ".\n"
 
 .data
-buffer:     .space  11
+buffer:     .space  BUFFER_SIZE
 
 .text
 .global main
@@ -33,7 +34,44 @@ main:
 
     sub     s2, s2, a0
 
+    mv      a0, s2
+    jal     printInt
+
     j exit
+
+# int printInt : Print given integer as a string
+# a0 <int value> : the integer
+printInt:
+    mv      s1, ra                          # s1: saved return address
+    la      t0, buffer                      # t0: buffer pointer
+    addi    t0, t0, BUFFER_SIZE             # Move buffer pointer to very end.
+    li      t1, 10                          # t1: decimal place multiplier
+    printIntLoop:
+        # It's a good thing the user input is perfect, just saying.
+        addi    t0, t0, -1
+        rem     t2, a0, t1                  # t2: last digit value
+        addi    t2, t2, 48                  # t2: last digit representation
+        sw      t2, 0(t0)
+        beqz    a0, printIntWrite
+        div     a0, a0, t1                  # One less power of ten to go.
+        j printIntLoop
+    printIntWrite:
+        la      a0, label_f
+        jal print
+
+        li      a7, SYS_WRITE               # a7: system call
+        li      a0, STDOUT                  # a0: file descriptor
+        mv      a1, t0                      # a1: offset buffer address
+        la      a2, buffer
+        addi    a2, a2, BUFFER_SIZE
+        sub     a2, a2, a1                  # a2: string length
+        ecall                               # error point
+
+        la      a0, end
+        jal print
+    printIntExit:
+        mv      ra, s1                      # ra: restored return address
+        ret
 
 # int inputInt : Prompt user for an integer
 # a0 <string *prompt> : the prompt address
@@ -43,7 +81,6 @@ inputInt:
     jal readInt
     mv      ra, s1                          # ra: restored return address
     ret
-
 
 # int readInt : Read integer from user input
 readInt:
