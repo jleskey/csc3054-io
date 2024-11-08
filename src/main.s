@@ -6,11 +6,13 @@
 .equ    BUFFER_SIZE,    12
 
 .section .rodata
-prompt_a:   .asciz  "Input a: "
-prompt_b:   .asciz  "Input b: "
-prompt_c:   .asciz  "Input c: "
-label_f:    .asciz  "The result of f = a + b - c is "
-end:        .asciz  ".\n"
+intro_equation:     .asciz  "Equation\n========\nf = a + b - c\n\n"
+intro_inputs:       .asciz  "Inputs\n======\n"
+prompt_a:           .asciz  "let a = "
+prompt_b:           .asciz  "let b = "
+prompt_c:           .asciz  "let c = "
+intro_results:      .asciz  "\nResult\n======\nf = "
+end:                .asciz  "\n"
 
 .data
 buffer:     .space  BUFFER_SIZE
@@ -19,6 +21,12 @@ buffer:     .space  BUFFER_SIZE
 .global main
 
 main:
+    la      a0, intro_equation
+    jal     print
+
+    la      a0, intro_inputs
+    jal     print
+
     la      a0, prompt_a
     jal     inputInt
 
@@ -34,8 +42,14 @@ main:
 
     sub     s3, s3, a0
 
+    la      a0, intro_results
+    jal print
+
     mv      a0, s3
     jal     printInt
+
+    la      a0, end
+    jal print
 
     j exit
 
@@ -58,15 +72,7 @@ printInt:
         div     a0, a0, t1                  # One less power of ten to go.
         j printIntLoop
     printIntWrite:
-        mv      s2, t0
-
-        la      a0, label_f
-        jal print
-
-        mv      a0, s2                      # a0: offset buffer address
-        jal print
-
-        la      a0, end
+        mv      a0, t0                      # a0: offset buffer address
         jal print
     printIntExit:
         mv      ra, s1                      # ra: restored return address
