@@ -3,7 +3,7 @@
 .equ    SYS_READ,       63
 .equ    SYS_WRITE,      64
 .equ    SYS_EXIT,       93
-.equ    BUFFER_SIZE,    11
+.equ    BUFFER_SIZE,    12
 
 .section .rodata
 prompt_a:   .asciz  "Input a: "
@@ -45,6 +45,8 @@ printInt:
     mv      s1, ra                          # s1: saved return address
     la      t0, buffer                      # t0: buffer pointer
     addi    t0, t0, BUFFER_SIZE             # Move buffer pointer to very end.
+    addi    t0, t0, -1
+    sb      zero, 0(t0)
     li      t1, 10                          # t1: decimal place multiplier
     printIntLoop:
         # It's a good thing the user input is perfect, just saying.
