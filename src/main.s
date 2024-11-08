@@ -62,15 +62,25 @@ printInt:
     addi    t0, t0, -1
     sb      zero, 0(t0)
     li      t1, 10                          # t1: decimal place multiplier
+
+    li      t4, 0                           # t4: negation flag ('-' -> true)
+    bge     a0, zero, printIntLoop
+    li      t4, '-'
+    sub     a0, zero, a0
+
     printIntLoop:
         # It's a good thing the user input is perfect, just saying.
-        beqz    a0, printIntWrite
+        beqz    a0, printIntNegate
         addi    t0, t0, -1
         rem     t2, a0, t1                  # t2: last digit value
         addi    t2, t2, 48                  # t2: last digit representation
         sb      t2, 0(t0)
         div     a0, a0, t1                  # One less power of ten to go.
         j printIntLoop
+    printIntNegate:
+        beqz    t4, printIntWrite
+        addi    t0, t0, -1
+        sb      t4, 0(t0)
     printIntWrite:
         mv      a0, t0                      # a0: offset buffer address
         jal print
@@ -95,20 +105,29 @@ readInt:
     li      a2, BUFFER_SIZE                 # a2: buffer size
     ecall
 
-    li      a0, 0                           # a0 (return): entered integer
+    li      a0, 0                           # a0 (return)
     la      t0, buffer                      # t0: buffer address
     li      t1, '\n'                        # t1: newline character
     li      t2, 10                          # t2: decimal place multiplier
 
+    lb      t3, 0(t0)                       # t3: current character code
+    li      t4, '-'                         # t4: negative sign
+    bne     t3, t4, readIntLoop
+    li      t4, 0                           # t4: negation flag (0 -> true)
+    addi    t0, t0, 1
+
     readIntLoop:
         lb      t3, 0(t0)                   # t3: current character code
-        beq     t3, t1, readIntExit
-        beqz    t3, readIntExit
+        beq     t3, t1, readIntNegate
+        beqz    t3, readIntNegate
         addi    t3, t3, -48                 # t3: current digit
         mul     a0, a0, t2
-        add     a0, a0, t3
+        add     a0, a0, t3                  # a0 (return): entered integer
         addi    t0, t0, 1
         j       readIntLoop
+    readIntNegate:
+        bnez    t4, readIntExit
+        sub     a0, zero, a0
     readIntExit:
         ret
 
