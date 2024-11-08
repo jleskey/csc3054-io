@@ -1,0 +1,93 @@
+joseph@localhost:~> cd csc3054-io/bin/
+joseph@localhost:~/csc3054-io/bin> riscv64-elf-gcc -o process ../src/main.s
+joseph@localhost:~/csc3054-io/bin> spike /usr/local/riscv64-elf/bin/pk process
+Equation:
+
+	f = a + b - c
+
+Inputs:
+
+	let a = 0
+	let b = 0
+	let c = 0
+
+Result:
+
+	f = 0
+
+joseph@localhost:~/csc3054-io/bin> spike /usr/local/riscv64-elf/bin/pk process
+Equation:
+
+	f = a + b - c
+
+Inputs:
+
+	let a = -10
+	let b = 0
+	let c = 10
+
+Result:
+
+	f = -20
+
+joseph@localhost:~/csc3054-io/bin> spike /usr/local/riscv64-elf/bin/pk process
+Equation:
+
+	f = a + b - c
+
+Inputs:
+
+	let a = -10
+	let b = -10
+	let c = -10
+
+Result:
+
+	f = -10
+
+joseph@localhost:~/csc3054-io/bin> spike /usr/local/riscv64-elf/bin/pk process
+Equation:
+
+	f = a + b - c
+
+Inputs:
+
+	let a = 10
+	let b = 10
+	let c = 10
+
+Result:
+
+	f = 10
+
+joseph@localhost:~/csc3054-io/bin> spike /usr/local/riscv64-elf/bin/pk process
+Equation:
+
+	f = a + b - c
+
+Inputs:
+
+	let a = 123
+	let b = 321
+	let c = 0
+
+Result:
+
+	f = 444
+
+joseph@localhost:~/csc3054-io/bin> spike /usr/local/riscv64-elf/bin/pk process
+Equation:
+
+	f = a + b - c
+
+Inputs:
+
+	let a = 0
+	let b = 0
+	let c = 123456789
+
+Result:
+
+	f = -123456789
+
+joseph@localhost:~/csc3054-io/bin>
