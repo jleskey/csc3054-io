@@ -70,13 +70,12 @@ printInt:
 
     printIntLoop:
         # It's a good thing the user input is perfect, just saying.
-        beqz    a0, printIntNegate
         addi    t0, t0, -1
         rem     t2, a0, t1                  # t2: last digit value
         addi    t2, t2, 48                  # t2: last digit representation
         sb      t2, 0(t0)
         div     a0, a0, t1                  # One less power of ten to go.
-        j printIntLoop
+        bnez    a0, printIntLoop
     printIntNegate:
         beqz    t4, printIntWrite
         addi    t0, t0, -1
