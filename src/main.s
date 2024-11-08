@@ -22,19 +22,19 @@ main:
     la      a0, prompt_a
     jal     inputInt
 
-    mv      s2, a0
+    mv      s3, a0
 
     la      a0, prompt_b
     jal     inputInt
 
-    add     s2, s2, a0
+    add     s3, s3, a0
 
     la      a0, prompt_c
     jal inputInt
 
-    sub     s2, s2, a0
+    sub     s3, s3, a0
 
-    mv      a0, s2
+    mv      a0, s3
     jal     printInt
 
     j exit
@@ -48,24 +48,21 @@ printInt:
     li      t1, 10                          # t1: decimal place multiplier
     printIntLoop:
         # It's a good thing the user input is perfect, just saying.
+        beqz    a0, printIntWrite
         addi    t0, t0, -1
         rem     t2, a0, t1                  # t2: last digit value
         addi    t2, t2, 48                  # t2: last digit representation
-        sw      t2, 0(t0)
-        beqz    a0, printIntWrite
+        sb      t2, 0(t0)
         div     a0, a0, t1                  # One less power of ten to go.
         j printIntLoop
     printIntWrite:
+        mv      s2, t0
+
         la      a0, label_f
         jal print
 
-        li      a7, SYS_WRITE               # a7: system call
-        li      a0, STDOUT                  # a0: file descriptor
-        mv      a1, t0                      # a1: offset buffer address
-        la      a2, buffer
-        addi    a2, a2, BUFFER_SIZE
-        sub     a2, a2, a1                  # a2: string length
-        ecall                               # error point
+        mv      a0, s2                      # a0: offset buffer address
+        jal print
 
         la      a0, end
         jal print
