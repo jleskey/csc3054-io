@@ -73,7 +73,7 @@ printInt:
 # int inputInt : Prompt user for an integer
 # a0 <string *prompt> : the prompt address
 inputInt:
-    mv      s1, ra                          # s0: saved return address
+    mv      s1, ra                          # s1: saved return address
     jal print
     jal readInt
     mv      ra, s1                          # ra: restored return address
@@ -84,12 +84,12 @@ readInt:
     li      a7, SYS_READ                    # a7: system call
     li      a0, STDIN                       # a0: file descriptor
     la      a1, buffer                      # a1: buffer address
-    li      a2, 11                          # Accept 11 characters.
+    li      a2, BUFFER_SIZE                 # a2: buffer size
     ecall
 
     li      a0, 0                           # a0 (return): entered integer
     la      t0, buffer                      # t0: buffer address
-    la      t1, '\n'                        # t1: newline character
+    li      t1, '\n'                        # t1: newline character
     la      t2, 10                          # t2: decimal place multiplier
 
     readIntLoop:
@@ -107,7 +107,7 @@ readInt:
 # int print : Print the given string
 # a0 <string *value> : the string address
 print:
-    mv      s0, ra                          # s1: saved return address
+    mv      s0, ra                          # s0: saved return address
     mv      a1, a0                          # a1: string address
 
     jal     measureString
