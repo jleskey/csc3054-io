@@ -98,7 +98,7 @@ readInt:
     li      a0, 0                           # a0 (return): entered integer
     la      t0, buffer                      # t0: buffer address
     li      t1, '\n'                        # t1: newline character
-    la      t2, 10                          # t2: decimal place multiplier
+    li      t2, 10                          # t2: decimal place multiplier
 
     readIntLoop:
         lb      t3, 0(t0)                   # t3: current character code
